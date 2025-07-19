@@ -1,0 +1,1442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FixFast - 10min Appliance Repair</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            
+        }
+
+        :root {
+            --primary-black: #0a0a0a;
+            --secondary-black: #1a1a1a;
+            --deep-black: #050505;
+            --fire-red: #ff2d00;
+            --crimson: #dc143c;
+            --electric-orange: #ff6b00;
+            --golden-yellow: #ffd700;
+            --deep-orange: #ff4500;
+            --maroon: #8b0000;
+            --amber: #ffbf00;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 107, 0, 0.15);
+            --text-primary: #ffffff;
+            --text-secondary: #b8860b;
+            --text-accent: #ff6b00;
+            --shadow-fire: 0 0 30px rgba(255, 45, 0, 0.4);
+            --shadow-amber: 0 0 20px rgba(255, 191, 0, 0.3);
+            --glow-red: 0 0 40px rgba(220, 20, 60, 0.5);
+        }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--primary-black);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: 1.6;
+            position: relative;
+        }
+
+        /* Animated Background */
+        .bg-matrix {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 15% 25%, rgba(255, 45, 0, 0.1) 0%, transparent 60%),
+                radial-gradient(circle at 85% 75%, rgba(255, 191, 0, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 45% 10%, rgba(220, 20, 60, 0.12) 0%, transparent 70%),
+                radial-gradient(circle at 70% 40%, rgba(255, 107, 0, 0.06) 0%, transparent 55%),
+                linear-gradient(135deg, rgba(139, 0, 0, 0.02) 0%, transparent 100%);
+            animation: matrixShift 15s ease-in-out infinite alternate;
+            z-index: -2;
+        }
+
+        @keyframes matrixShift {
+            0% { 
+                transform: scale(1) rotate(0deg);
+                opacity: 0.8;
+            }
+            50% {
+                transform: scale(1.05) rotate(2deg);
+                opacity: 1;
+            }
+            100% { 
+                transform: scale(1.1) rotate(-1deg);
+                opacity: 0.9;
+            }
+        }
+
+        /* Floating Particles */
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--electric-orange);
+            border-radius: 50%;
+            animation: float 8s infinite ease-in-out;
+            box-shadow: 0 0 10px var(--electric-orange);
+        }
+
+        @keyframes float {
+            0%, 100% { 
+                transform: translateY(0px) translateX(0px);
+                opacity: 0;
+            }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            50% { 
+                transform: translateY(-20px) translateX(10px);
+                opacity: 0.8;
+            }
+        }
+
+        /* Glass Morphism Enhanced */
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 107, 0, 0.1),
+                0 0 20px rgba(255, 107, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 191, 0, 0.05), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 95%;
+            max-width: 1200px;
+            padding: 18px 35px;
+            z-index: 1000;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: slideDown 0.8s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 2.2rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, var(--fire-red), var(--electric-orange), var(--golden-yellow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(255, 45, 0, 0.6);
+            position: relative;
+            animation: logoGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes logoGlow {
+            0% { filter: drop-shadow(0 0 10px rgba(255, 45, 0, 0.8)); }
+            100% { filter: drop-shadow(0 0 20px rgba(255, 191, 0, 0.6)); }
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 35px;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.4s ease;
+            position: relative;
+            padding: 8px 16px;
+            border-radius: 12px;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(45deg, var(--fire-red), var(--golden-yellow));
+            transition: all 0.4s ease;
+            transform: translateX(-50%);
+        }
+
+        .nav-links a:hover {
+            color: var(--text-accent);
+            text-shadow: 0 0 15px rgba(255, 107, 0, 0.8);
+            background: rgba(255, 107, 0, 0.05);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .cta-btn {
+            background: linear-gradient(135deg, var(--fire-red), var(--electric-orange), var(--crimson));
+            border: none;
+            padding: 14px 28px;
+            border-radius: 50px;
+            color: white;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow-fire);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 12px 40px rgba(255, 45, 0, 0.6);
+        }
+
+        .cta-btn:hover::before {
+            left: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 0 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            animation: fadeInUp 1.2s ease-out;
+            position: relative;
+            z-index: 10;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(60px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero h1 {
+            font-size: clamp(3.5rem, 10vw, 7rem);
+            font-weight: 900;
+            margin-bottom: 25px;
+            background: linear-gradient(45deg, var(--text-primary), var(--fire-red), var(--golden-yellow), var(--electric-orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.1;
+            text-shadow: 0 0 50px rgba(255, 45, 0, 0.3);
+            animation: titleGlow 3s ease-in-out infinite alternate;
+            position: relative;
+        }
+
+        @keyframes titleGlow {
+            0% { 
+                filter: drop-shadow(0 0 20px rgba(255, 45, 0, 0.4));
+                transform: scale(1);
+            }
+            100% { 
+                filter: drop-shadow(0 0 40px rgba(255, 191, 0, 0.6));
+                transform: scale(1.02);
+            }
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            margin-bottom: 50px;
+            animation: fadeInUp 1.2s ease-out 0.3s both;
+            line-height: 1.7;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 25px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 50px;
+            animation: fadeInUp 1.2s ease-out 0.6s both;
+        }
+
+        .primary-btn {
+            background: linear-gradient(135deg, var(--fire-red), var(--electric-orange));
+            border: none;
+            padding: 20px 45px;
+            border-radius: 50px;
+            color: white;
+            font-size: 1.15rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow-fire);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .primary-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--golden-yellow), var(--crimson));
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .primary-btn:hover {
+            transform: translateY(-4px) scale(1.08);
+            box-shadow: 0 20px 50px rgba(255, 45, 0, 0.5);
+        }
+
+        .primary-btn:hover::before {
+            opacity: 1;
+        }
+
+        .primary-btn span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .secondary-btn {
+            background: linear-gradient(135deg, var(--golden-yellow), var(--amber));
+            color: var(--primary-black);
+        }
+
+        /* Service Grid */
+        .services {
+            padding: 120px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 80px;
+            background: linear-gradient(45deg, var(--fire-red), var(--electric-orange), var(--golden-yellow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: sectionTitleGlow 2s ease-in-out infinite alternate;
+            position: relative;
+        }
+
+        @keyframes sectionTitleGlow {
+            0% { filter: drop-shadow(0 0 20px rgba(255, 45, 0, 0.6)); }
+            100% { filter: drop-shadow(0 0 30px rgba(255, 191, 0, 0.8)); }
+        }
+
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 35px;
+            margin-bottom: 80px;
+        }
+
+        .service-card {
+            padding: 45px 35px;
+            text-align: center;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transform-style: preserve-3d;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 45, 0, 0.1), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .service-card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(255, 107, 0, 0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            animation: rotate 8s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .service-card:hover::before {
+            left: 100%;
+        }
+
+        .service-card:hover::after {
+            opacity: 1;
+        }
+
+        .service-card:hover {
+            transform: translateY(-15px) rotateX(5deg);
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.4),
+                0 0 30px rgba(255, 45, 0, 0.3);
+            border-color: var(--fire-red);
+        }
+
+        .service-icon {
+            font-size: 4.5rem;
+            margin-bottom: 25px;
+            color: var(--electric-orange);
+            display: block;
+            transition: all 0.4s ease;
+            text-shadow: 0 0 20px rgba(255, 107, 0, 0.6);
+        }
+
+        .service-card:hover .service-icon {
+            transform: scale(1.2) rotateY(15deg);
+            color: var(--golden-yellow);
+            text-shadow: 0 0 30px rgba(255, 191, 0, 0.8);
+        }
+
+        .service-card h3 {
+            font-size: 1.6rem;
+            margin-bottom: 18px;
+            color: var(--text-primary);
+            font-weight: 700;
+            transition: color 0.4s ease;
+        }
+
+        .service-card:hover h3 {
+            color: var(--text-accent);
+        }
+
+        .service-card p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            font-size: 1rem;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 120px 20px;
+            background: 
+                radial-gradient(circle at 30% 20%, rgba(255, 45, 0, 0.03) 0%, transparent 70%),
+                radial-gradient(circle at 70% 80%, rgba(255, 191, 0, 0.02) 0%, transparent 60%);
+            position: relative;
+        }
+
+        .features-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 50px;
+        }
+
+        .feature-item {
+            text-align: center;
+            padding: 40px 25px;
+            transition: transform 0.4s ease;
+        }
+
+        .feature-item:hover {
+            transform: translateY(-10px);
+        }
+
+        .feature-icon {
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, var(--fire-red), var(--electric-orange));
+            color: white;
+            box-shadow: var(--shadow-fire);
+            transition: all 0.5s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-icon::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--golden-yellow), var(--crimson));
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .feature-item:hover .feature-icon {
+            transform: scale(1.1) rotate(10deg);
+            box-shadow: var(--glow-red);
+        }
+
+        .feature-item:hover .feature-icon::before {
+            opacity: 1;
+        }
+
+        .feature-item h3 {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+
+        .feature-item p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Booking Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            backdrop-filter: blur(15px);
+            animation: modalFadeIn 0.4s ease-out;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                backdrop-filter: blur(0px);
+            }
+            to {
+                opacity: 1;
+                backdrop-filter: blur(15px);
+            }
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 550px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 50px 40px;
+            animation: modalSlideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -30%) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 2.5rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-modal:hover {
+            color: var(--fire-red);
+            background: rgba(255, 45, 0, 0.1);
+            transform: scale(1.1);
+        }
+
+        .modal h2 {
+            margin-bottom: 35px;
+            color: var(--electric-orange);
+            font-size: 2rem;
+            font-weight: 800;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 30px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .form-input, .form-select {
+            width: 100%;
+            padding: 18px 25px;
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            background: var(--glass-bg);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.4s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--fire-red);
+            box-shadow: 0 0 0 3px rgba(255, 45, 0, 0.2);
+            background: rgba(255, 45, 0, 0.02);
+        }
+
+        .appliance-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            margin-top: 15px;
+        }
+
+        .appliance-card {
+            padding: 25px 15px;
+            text-align: center;
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            background: var(--glass-bg);
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .appliance-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--fire-red), var(--electric-orange));
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .appliance-card:hover, .appliance-card.selected {
+            border-color: var(--fire-red);
+            background: rgba(255, 45, 0, 0.08);
+            transform: scale(1.08) translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 45, 0, 0.3);
+        }
+
+        .appliance-card.selected::before {
+            opacity: 0.1;
+        }
+
+        .appliance-icon {
+            font-size: 2.2rem;
+            margin-bottom: 12px;
+            display: block;
+            position: relative;
+            z-index: 1;
+        }
+
+        .appliance-card div {
+            font-weight: 600;
+            position: relative;
+            z-index: 1;
+        }
+
+        .price-estimate {
+            padding: 25px;
+            margin: 25px 0;
+            text-align: center;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 191, 0, 0.3);
+            background: rgba(255, 191, 0, 0.05);
+        }
+
+        .price-estimate h3 {
+            color: var(--golden-yellow);
+            margin-bottom: 12px;
+            font-size: 1.3rem;
+        }
+
+        #estimatedPrice {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, var(--fire-red), var(--golden-yellow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Floating Action Button */
+        .fab {
+            position: fixed;
+            bottom: 35px;
+            right: 35px;
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--fire-red), var(--electric-orange));
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.8rem;
+            cursor: pointer;
+            box-shadow: var(--shadow-fire);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+            animation: fabPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes fabPulse {
+            0%, 100% { 
+                transform: scale(1);
+                box-shadow: var(--shadow-fire);
+            }
+            50% { 
+                transform: scale(1.05);
+                box-shadow: 0 15px 45px rgba(255, 45, 0, 0.6);
+            }
+        }
+
+        .fab:hover {
+            transform: scale(1.15);
+            box-shadow: var(--glow-red);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--secondary-black);
+            padding: 80px 20px 40px;
+            margin-top: 120px;
+            border-top: 1px solid var(--glass-border);
+            position: relative;
+        }
+
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--fire-red), var(--golden-yellow), var(--fire-red), transparent);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 50px;
+        }
+
+        .footer-section h3 {
+            color: var(--electric-orange);
+            margin-bottom: 25px;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .footer-section a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: block;
+            margin-bottom: 12px;
+            padding: 5px 0;
+        }
+
+        .footer-section a:hover {
+            color: var(--electric-orange);
+            text-shadow: 0 0 10px rgba(255, 107, 0, 0.5);
+            padding-left: 10px;
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 50px;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--glass-border);
+            border-top: 4px solid var(--fire-red);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 25px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .navbar {
+                width: 95%;
+                padding: 15px 25px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 3.5rem;
+            }
+
+            .hero-cta {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .service-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .appliance-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .fab {
+                width: 60px;
+                height: 60px;
+                bottom: 25px;
+                right: 25px;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--primary-black);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(45deg, var(--fire-red), var(--electric-orange));
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(45deg, var(--golden-yellow), var(--crimson));
+        }
+
+        /* Selection Styling */
+        ::selection {
+            background: rgba(255, 45, 0, 0.3);
+            color: var(--text-primary);
+        }
+
+        /* Utility Classes */
+        .text-glow {
+            text-shadow: 0 0 20px currentColor;
+        }
+
+        .pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="bg-matrix"></div>
+    
+    <!-- Floating Particles -->
+    <div class="particle" style="top: 10%; left: 10%; animation-delay: 0s;"></div>
+    <div class="particle" style="top: 20%; left: 80%; animation-delay: 2s;"></div>
+    <div class="particle" style="top: 50%; left: 30%; animation-delay: 4s;"></div>
+    <div class="particle" style="top: 70%; left: 70%; animation-delay: 6s;"></div>
+    <div class="particle" style="top: 90%; left: 20%; animation-delay: 1s;"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar glass">
+        <div class="nav-content">
+            <div class="logo">FixFast</div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <button class="cta-btn" onclick="openModal()">Book Now</button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>10-Minute<br/>Appliance<br/>Repair</h1>
+            <p class="hero-subtitle">Lightning-fast repairs for all your home appliances. Professional technicians at your doorstep in under 10 minutes.</p>
+            <div class="hero-cta">
+                <a href="#" class="primary-btn" onclick="openModal()">
+                    <span>⚡ Emergency Repair</span>
+                </a>
+                <a href="#services" class="primary-btn secondary-btn">
+                    <span>📋 View Services</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="services" id="services">
+        <h2 class="section-title">Our Lightning Services</h2>
+        <div class="service-grid">
+            <div class="service-card glass">
+                <div class="service-icon">❄️</div>
+                <h3>AC Repair</h3>
+                <p>Emergency cooling solutions with professional technicians arriving within 10 minutes.</p>
+            </div>
+            <div class="service-card glass">
+                <div class="service-icon">👕</div>
+                <h3>Washing Machine</h3>
+                <p>Quick fixes for all washing machine issues, from leaks to electrical problems.</p>
+            </div>
+            <div class="service-card glass">
+                <div class="service-icon">🔥</div>
+                <h3>Refrigerator</h3>
+                <p>Cooling system repairs and maintenance to keep your food fresh and safe.</p>
+            </div>
+            <div class="service-card glass">
+                <div class="service-icon">⚡</div>
+                <h3>Microwave</h3>
+                <p>Fast microwave repairs for heating issues, door problems, and electrical faults.</p>
+            </div>
+            <div class="service-card glass">
+                <div class="service-icon">🏠</div>
+                <h3>Water Heater</h3>
+                <p>Instant hot water solutions with safety-certified repair technicians.</p>
+            </div>
+            <div class="service-card glass">
+                <div class="service-icon">💻📱</div>
+                <h3>And Many More, You Need</h3>
+                <p>Complete solutions for your Mobile, TV, Laptop, Computers and all other devices.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="about">
+        <div class="features-container">
+            <h2 class="section-title">Why Choose FixFast?</h2>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <span>⚡</span>
+                    </div>
+                    <h3>10-Minute Response</h3>
+                    <p>Our technicians arrive at your doorstep within 10 minutes of booking, guaranteed.</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <span>🔒</span>
+                    </div>
+                    <h3>Verified Technicians</h3>
+                    <p>Background-checked professionals with verified skills and insurance coverage.</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <span>💰</span>
+                    </div>
+                    <h3>Transparent Pricing</h3>
+                    <p>No hidden charges. See exact pricing before booking with our smart calculator.</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <span>📱</span>
+                    </div>
+                    <h3>Real-time Tracking</h3>
+                    <p>Track your technician's location and get live updates on repair progress.</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <span>🛡️</span>
+                    </div>
+                    <h3>Service Warranty</h3>
+                    <p>30-day warranty on all repairs with free follow-up service if needed.</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <span>⭐</span>
+                    </div>
+                    <h3>5-Star Service</h3>
+                    <p>Rated excellent by 10,000+ customers across major Indian cities.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Booking Modal -->
+    <div class="modal" id="bookingModal">
+        <div class="modal-content glass">
+            <button class="close-modal" onclick="closeModal()">&times;</button>
+            <h2>Book Emergency Repair</h2>
+            
+            <div class="loading" id="loadingSection">
+                <div class="spinner"></div>
+                <p>Finding nearby technicians...</p>
+            </div>
+
+            <form id="bookingForm">
+                <div class="form-group">
+                    <label>Select Your Appliance</label>
+                    <div class="appliance-grid">
+                        <div class="appliance-card" data-appliance="ac" data-price="299">
+                            <div class="appliance-icon">❄️</div>
+                            <div>Air Conditioner</div>
+                        </div>
+                        <div class="appliance-card" data-appliance="washing" data-price="249">
+                            <div class="appliance-icon">👕</div>
+                            <div>Washing Machine</div>
+                        </div>
+                        <div class="appliance-card" data-appliance="fridge" data-price="199">
+                            <div class="appliance-icon">🔥</div>
+                            <div>Refrigerator</div>
+                        </div>
+                        <div class="appliance-card" data-appliance="microwave" data-price="149">
+                            <div class="appliance-icon">⚡</div>
+                            <div>Microwave</div>
+                        </div>
+                        <div class="appliance-card" data-appliance="heater" data-price="179">
+                            <div class="appliance-icon">🏠</div>
+                            <div>Water Heater</div>
+                        </div>
+                        <div class="appliance-card" data-appliance="dishwasher" data-price="229">
+                            <div class="appliance-icon">🌪️</div>
+                            <div>Dishwasher</div>
+                        </div>
+                        <div class="appliance-card" data-appliance="mobile" data-price="99">
+                            <div class="appliance-icon">📱</div>
+                            <div>Mobile Phone</div>
+                        </div>
+                        <div class="appliance-card" data-appliance="laptop" data-price="199">
+                            <div class="appliance-icon">💻</div>
+                            <div>Laptop/Computer</div>
+                        </div>
+                        <div class="appliance-card" data-appliance="tv" data-price="149">
+                            <div class="appliance-icon">📺</div>
+                            <div>Television</div>
+                        </div>
+                        <div class="appliance-card" data-appliance="other" data-price="DEPENDS ON SERVICE">
+                            <div class="appliance-icon">🔧</div>
+                            <div>Other Appliance</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="issue">Describe the Issue</label>
+                    <textarea class="form-input" id="issue" rows="3" placeholder="e.g., AC not cooling, making strange noise..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="urgency">Service Type</label>
+                    <select class="form-select" id="urgency">
+                        <option value="emergency">Emergency (10 min) - WILL CHARGE ₹50 extra</option>
+                        <option value="regular">Regular </option>
+                        <option value="scheduled">Scheduled (Choose time)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="name">Your Name</label>
+                    <input type="text" class="form-input" id="name" placeholder="Enter your full name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" class="form-input" id="phone" placeholder="+91 XXXXX XXXXX" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="address">Address</label>
+                    <textarea class="form-input" id="address" rows="2" placeholder="Complete address with landmark" required></textarea>
+                </div>
+
+                <div class="price-estimate">
+                    <h3>Estimated Cost</h3>
+                    <div id="estimatedPrice">₹249</div>
+                    <small style="color: var(--text-secondary); margin-top: 10px; display: block;">
+                        *Final cost may vary based on parts required
+                    </small>
+                </div>
+
+                <button type="submit" class="primary-btn" style="width: 100%; margin-top: 25px;">
+                    <span>🚀 Book Emergency Repair</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Floating Action Button -->
+    <button class="fab" onclick="openModal()" title="Emergency Booking">
+        ⚡
+    </button>
+
+    <!-- Footer -->
+    <footer class="footer" id="contact">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <a href="#services">Services</a>
+                <a href="#about">About Us</a>
+                <a href="#pricing">Pricing</a>
+                <a href="#contact">Contact</a>
+            </div>
+            <div class="footer-section">
+                <h3>Services</h3>
+                <a href="#">AC Repair</a>
+                <a href="#">Washing Machine</a>
+                <a href="#">Refrigerator</a>
+                <a href="#">Emergency Service</a>
+                <a href="#">Mobile Repair</a>
+                <a href="#">Laptop Repair</a>
+                <a href="#">And More...</a>
+            </div>
+            <div class="footer-section">
+                <h3>Contact Info</h3>
+                <a href="tel:+9177*****357">📞 +91 77*****357</a>
+                <a href="mailto:">✉️ help@fixfast.in</a>
+                <a href="#">📍 Available in 30+ Cities</a>
+            </div>
+            <div class="footer-section">
+                <h3>Follow Us</h3>
+                <a href="#instagram">Instagram</a>
+                <a href="#facebook">Facebook</a>
+                <a href="#twitter">Twitter</a>
+                <a href="#youtube">YouTube</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Add more floating particles dynamically
+        function createParticles() {
+            for (let i = 0; i < 15; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 8 + 's';
+                document.body.appendChild(particle);
+            }
+        }
+
+        // Modal functionality
+        function openModal() {
+            document.getElementById('bookingModal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('bookingModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modal when clicking outside
+        window.addEventListener('click', function(event) {
+            const modal = document.getElementById('bookingModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        });
+
+        // Appliance selection and price calculation
+        document.addEventListener('DOMContentLoaded', function() {
+            createParticles();
+            
+            const applianceCards = document.querySelectorAll('.appliance-card');
+            const estimatedPrice = document.getElementById('estimatedPrice');
+            const urgencySelect = document.getElementById('urgency');
+            let basePrice = 249;
+
+            applianceCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    // Remove previous selection
+                    applianceCards.forEach(c => c.classList.remove('selected'));
+                    
+                    // Add selection to clicked card
+                    this.classList.add('selected');
+                    
+                    // Update base price
+                    basePrice = parseInt(this.dataset.price);
+                    updatePrice();
+                });
+            });
+
+            urgencySelect.addEventListener('change', updatePrice);
+
+            function updatePrice() {
+                let finalPrice = basePrice;
+                
+                if (urgencySelect.value === 'emergency') {
+                    finalPrice += 50;
+                }
+                
+                estimatedPrice.textContent = '₹' + finalPrice;
+            }
+
+            // Form submission
+            document.getElementById('bookingForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Show loading
+                document.getElementById('loadingSection').style.display = 'block';
+                
+                // Simulate booking process
+                setTimeout(() => {
+                    document.getElementById('loadingSection').style.display = 'none';
+                    
+                    // Success message
+                    alert('🎉 Booking Confirmed!\n\nTechnician Ravi Kumar is on the way!\nETA: 8 minutes\nPhone: +91 98765 43210\n\nTrack live location in the app.');
+                    
+                    closeModal();
+                    
+                    // Reset form
+                    this.reset();
+                    applianceCards.forEach(c => c.classList.remove('selected'));
+                    updatePrice();
+                }, 3000);
+            });
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 100) {
+                navbar.style.background = 'rgba(10, 10, 10, 0.95)';
+                navbar.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.5)';
+            } else {
+                navbar.style.background = 'var(--glass-bg)';
+                navbar.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.4)';
+            }
+        });
+
+        // Add intersection observer for fade-in animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                }
+            });
+        }, observerOptions);
+
+        // Observe service cards and feature items
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.service-card, .feature-item').forEach(el => {
+                observer.observe(el);
+            });
+        });
+
+        // Add typing effect to hero title
+        function typeWriter(element, text, speed = 100) {
+            let i = 0;
+            element.textContent = '';
+            
+            function type() {
+                if (i < text.length) {
+                    element.textContent += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                }
+            }
+            
+            type();
+        }
+
+        // Enhanced mobile responsiveness
+        function handleResize() {
+            const hero = document.querySelector('.hero h1');
+            if (window.innerWidth < 768) {
+                hero.style.fontSize = '3rem';
+            } else {
+                hero.style.fontSize = 'clamp(3.5rem, 10vw, 7rem)';
+            }
+        }
+
+        window.addEventListener('resize', handleResize);
+        
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            // ESC to close modal
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+            
+            // Ctrl+B for quick booking
+            if (e.ctrlKey && e.key === 'b') {
+                e.preventDefault();
+                openModal();
+            }
+        });
+
+        // Add success animations and micro-interactions
+        function addSuccessFeedback(element) {
+            element.style.transform = 'scale(1.05)';
+            element.style.transition = 'transform 0.2s ease';
+            
+            setTimeout(() => {
+                element.style.transform = 'scale(1)';
+            }, 200);
+        }
+
+        // Enhanced form validation with real-time feedback
+        document.addEventListener('DOMContentLoaded', function() {
+            const phoneInput = document.getElementById('phone');
+            const nameInput = document.getElementById('name');
+            
+            phoneInput.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length > 10) value = value.slice(0, 10);
+                
+                if (value.length > 0) {
+                    e.target.value = '+91 ' + value.replace(/(\d{5})(\d+)/, '$1 $2');
+                }
+                
+                if (value.length === 10) {
+                    addSuccessFeedback(e.target);
+                }
+            });
+            
+            nameInput.addEventListener('input', function(e) {
+                e.target.value = e.target.value.replace(/[^a-zA-Z\s]/g, '');
+            });
+        });
+
+        console.log('🚀 FixFast is ready! Press Ctrl+B for quick booking or ESC to close modals.');
+    </script>
+</body>
+</html>
