@@ -85,8 +85,7 @@ From **ACs, washing machines, fridges, to microwaves**, FixFast empowers househo
 | S Mukesh Kumar | Market researcher |
 Special Thanks :--->>
 | TIC | ANANTRAJ BAGHEL SIR | CEO at TIC | Provided us opportunity and Co-Founder |
-| TIC | Saharsh Vaidya Sir | Project head |
----
+
 
 ## 📍 Future Scope & Vision
 
